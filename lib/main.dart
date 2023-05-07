@@ -29,10 +29,8 @@ class MyApp extends StatelessWidget {
     // This redirect function is checked for every GoRouter navigation
     // call throughout the app
     redirect: (context, state) {
-      if (LoginState.isLoggedIn) {
-        return '/';
-      } else {
-        return '/logn';
+      if (!LoginState.isLoggedIn) {
+        return '/login';
       }
     },
     errorBuilder: ((context, state) => const ErrorScreen()),
@@ -68,12 +66,25 @@ class MyApp extends StatelessWidget {
         builder: ((context, state) => HomeScreen()),
         routes: [
           GoRoute(
-            name: RouteNames.profileScreen,
-            path: 'profile',
-            builder: ((context, state) => ProfileScreen(
-                  firstName: state.queryParameters['name']!,
-                )),
-          ),
+              name: RouteNames.profileScreen,
+              path: 'profile',
+              pageBuilder: (context, state) {
+                return CustomTransitionPage(
+                  key: state.pageKey,
+                  child: ProfileScreen(
+                    firstName: state.queryParameters['name']!,
+                  ),
+                  transitionDuration: const Duration(seconds: 2),
+                  transitionsBuilder:
+                      (context, animation, secondaryAnimation, child) {
+                    return FadeTransition(
+                      opacity: CurveTween(curve: Curves.easeInOutCirc)
+                          .animate(animation),
+                      child: child,
+                    );
+                  },
+                );
+              }),
         ],
       ),
     ],
