@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:gorouter_tutorial/app/core/route_names.dart';
 
 class ProfileScreen extends StatelessWidget {
-  const ProfileScreen({Key? key}) : super(key: key);
+  final String firstName;
+
+  const ProfileScreen({Key? key, required this.firstName}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -9,8 +13,26 @@ class ProfileScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Profile Screen'),
       ),
-      body: const Center(
-        child: Text('Profile screen'),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Text(
+                'Welcome, $firstName',
+                style: const TextStyle(fontSize: 20),
+              ),
+            ),
+            ElevatedButton(
+              child: const Text('Home screen'),
+              onPressed: () {
+                // GoRouter.of(context).go('/');
+                context.goNamed(RouteNames.homeScreen);
+              },
+            ),
+          ],
+        ),
       ),
     );
   }
